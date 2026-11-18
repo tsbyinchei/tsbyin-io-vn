@@ -2,14 +2,13 @@
 
 Dự án cung cấp subdomain miễn phí dạng `*.tsbyin.io.vn` dành cho cộng đồng lập trình viên, học sinh và sinh viên, được quản lý theo mô hình **GitOps** tự động hóa hoàn toàn với GitHub Actions và Cloudflare DNS.
 
-🌐 **Trang web chính thức & Công cụ kiểm tra Subdomain:** [tsbyin.io.vn](https://tsbyin.io.vn)
+🌐 **Trang web chính thức & Công cụ kiểm tra Subdomain:** [sub.tsbyin.io.vn](https://sub.tsbyin.io.vn)
 
 ---
 
 ## ⚡ Tính năng nổi bật trên Web
 - **Tra cứu Subdomain tức thì:** Kiểm tra tính khả dụng, tên bảo lưu và trạng thái DNS của subdomain trước khi gửi PR.
 - **Trình tạo file JSON trực quan:** Điền biểu mẫu và tự động sinh mã JSON chuẩn hoặc tạo nhanh PR trên GitHub chỉ với 1 cú click.
-- **Giao diện hiện đại:** Hỗ trợ Dark/Light theme, song ngữ Việt - Anh, kế thừa ngôn ngữ thiết kế từ hệ sinh thái [tsbyin-cv](https://tsbyin.dev).
 
 ---
 
