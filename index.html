@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="tsbyin.io.vn — I/O Infrastructure & Nền tảng cấp phát Free Subdomain cho Developer và Homelabers qua GitOps." />
+  <title>tsbyin.io.vn — I/O Infrastructure & Free Subdomains</title>
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico" />
+  <link rel="apple-touch-icon" href="assets/icon-192.webp" />
+  <style>
+    :root {
+      --bg: #090a0f;
+      --surface: rgba(255, 255, 255, 0.03);
+      --surface-hover: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.09);
+      --border-focus: rgba(255, 255, 255, 0.28);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --ok: #10b981;
+      --err: #ef4444;
+      --warn: #f59e0b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg);
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text);
+      font-family: var(--sans);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 1.25rem 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+    }
+
+    /* Top Nav / Status Pill */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 8px var(--ok);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 span { color: var(--muted); font-weight: 400; }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 620px;
+      margin-bottom: 2rem;
+    }
+
+    /* Cards */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.35rem;
+      backdrop-filter: blur(16px);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-label {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Subdomain Checker */
+    .input-group {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.3rem 0.4rem 0.3rem 0.9rem;
+      transition: border-color 0.2s;
+    }
+
+    .input-group:focus-within { border-color: var(--border-focus); }
+
+    .input-group input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 1rem;
+    }
+
+    .domain-suffix {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-right: 0.75rem;
+      user-select: none;
+    }
+
+    .btn-check {
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 7px;
+      padding: 0.6rem 1.1rem;
+      font-family: var(--mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-check:hover { opacity: 0.88; }
+
+    #result {
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.84rem;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+    }
+
+    .res-ok { color: var(--ok); }
+    .res-err { color: var(--err); }
+    .res-warn { color: var(--warn); }
+
+    .btn-claim {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--ok);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-claim:hover { background: rgba(16, 185, 129, 0.25); }
+
+    /* Visual Generator Form */
+    .generator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 680px) {
+      .generator-grid { grid-template-columns: 1fr; }
+    }
+
+    .field-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .field-label {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .field-input, .field-select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field-input:focus, .field-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .field-select option {
+      background: #111420;
+      color: var(--text);
+    }
+
+    .preview-box {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      white-space: pre;
+      overflow-x: auto;
+      margin-top: 0.85rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.9rem;
+      border-radius: 7px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-focus);
+    }
+
+    .btn-primary-action {
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 7px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary-action:hover {
+      opacity: 0.88;
+    }
+
+    /* Bento Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      backdrop-filter: blur(12px);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    .card-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .card p {
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--muted);
+    }
+
+    footer a:hover { border-bottom-style: solid; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="top-bar">
+      <div class="status-pill">
+        <span class="dot"></span>
+        <span>I/O INFRASTRUCTURE • CLOUDFLARE EDGE</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#checker">// CHECKER</a>
+        <a href="#generator">// GENERATOR</a>
+        <a href="doc.html">// DOCS</a>
+        <a href="https://github.com/tsbyinchei/tsbyin-io-vn" target="_blank" rel="noopener">GITHUB &rarr;</a>
+      </nav>
+    </div>
+
+    <h1>tsbyin<span>.io.vn</span></h1>
+    <p class="subtitle">
+      Nền tảng cấp phát subdomain miễn phí vận hành hoàn toàn qua GitOps.
+    </p>
+
+    <!-- Live Subdomain Checker -->
+    <section class="section-card" id="checker">
+      <label class="card-label" for="subInput">
+        <span>// KIỂM TRA SUBDOMAIN KHẢ DỤNG</span>
+        <span id="cache-status" style="color: var(--muted); font-size: 0.7rem;"></span>
+      </label>
+      <form class="input-group" id="checkForm">
+        <input
+          type="text"
+          id="subInput"
+          placeholder="your-project"
+          autocomplete="off"
+          spellcheck="false"
+          required
+        />
+        <span class="domain-suffix">.tsbyin.io.vn</span>
+        <button type="submit" class="btn-check">Kiểm tra</button>
+      </form>
+      <div id="result"></div>
+    </section>
+
+    <!-- JSON Config Generator -->
+    <section class="section-card" id="generator">
+      <div class="card-label">
+        <span>// TRÌNH TẠO CẤU HÌNH DOMAINS/*.JSON</span>
+        <span>GITOPS PR READY</span>
+      </div>
+      <div class="generator-grid">
+        <div>
+          <div class="field-group">
+            <label class="field-label">TÊN SUBDOMAIN</label>
+            <input type="text" id="genSub" class="field-input" placeholder="my-subdomain" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">GITHUB USERNAME (TÁC GIẢ PR)</label>
+            <input type="text" id="genGh" class="field-input" placeholder="your-github-username" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">EMAIL LIÊN HỆ</label>
+            <input type="email" id="genEmail" class="field-input" placeholder="you@domain.dev" />
+          </div>
+        </div>
+        <div>
+          <div class="field-group">
+            <label class="field-label">LOẠI BẢN GHI (TYPE)</label>
+            <select id="genType" class="field-select">
+              <option value="CNAME">CNAME (Vercel, GitHub Pages, Render...)</option>
+              <option value="A">A (Địa chỉ IPv4 máy chủ / VPS)</option>
+              <option value="AAAA">AAAA (Địa chỉ IPv6 máy chủ)</option>
+              <option value="TXT">TXT (Xác thực / Verification)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">GIÁ TRỊ TRỎ TỚI (VALUE)</label>
+            <input type="text" id="genVal" class="field-input" placeholder="username.github.io" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">CLOUDFLARE PROXY (CDN / DDoS)</label>
+            <select id="genProxy" class="field-select">
+              <option value="false">Proxied: false (DNS Only - Khuyến nghị cho GH Pages / Vercel)</option>
+              <option value="true">Proxied: true (CDN Cloudflare, ẩn IP VPS)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-label" style="margin-top: 1rem; margin-bottom: 0.2rem;">
+        <span id="previewName">// PREVIEW: domains/my-subdomain.json</span>
+      </div>
+      <pre class="preview-box" id="jsonPreview"></pre>
+
+      <div class="btn-row">
+        <button class="btn-secondary" id="btnCopyJson">📋 Sao chép JSON</button>
+        <a class="btn-primary-action" id="btnOpenGitHubPR" href="#" target="_blank" rel="noopener">
+          🚀 Tạo file trên GitHub (Tự động điền) &rarr;
+        </a>
+      </div>
+    </section>
+
+    <!-- Navigation Bento Grid -->
+    <section class="grid">
+      <a class="card" href="doc.html">
+        <div>
+          <div class="card-tag">01 / DOCUMENTATION</div>
+          <h3>Docs & Quy định &rarr;</h3>
+          <p>Tài liệu hướng dẫn chi tiết từng bước, mẫu trỏ DNS (GitHub Pages, Vercel, VPS) và tiêu chuẩn an toàn.</p>
+        </div>
+      </a>
+
+      <a class="card" href="https://github.com/tsbyinchei/tsbyin-io-vn" target="_blank" rel="noopener">
+        <div>
+          <div class="card-tag">02 / GITOPS REPO</div>
+          <h3>Repository & Pull Request</h3>
+          <p>Mã nguồn mở quản lý toàn bộ bản ghi DNS tự động bằng Cloudflare API và GitHub Actions.</p>
+        </div>
+      </a>
+
+      <a class="card" href="https://tsbyin.dev" target="_blank" rel="noopener">
+        <div>
+          <div class="card-tag">03 / MAIN ECOSYSTEM</div>
+          <h3>tsbyin.dev &rarr;</h3>
+          <p>Chuyển hướng sang hệ sinh thái ứng dụng chính, Web PWA và dịch vụ của TsByin.</p>
+        </div>
+      </a>
+    </section>
+
+    <footer>
+      <span>&copy; 2026 TsByin &bull; Non-commercial .VN Infrastructure</span>
+      <span>Abuse / Contact: <a href="mailto:contact@sub.tsbyin.io.vn">contact@sub.tsbyin.io.vn</a></span>
+    </footer>
+  </main>
+
+  <script>
+    // 1. Danh sách RESERVED_NAMES đồng bộ 100% với scripts/validate_pr.py
+    const RESERVED = new Set([
+      // Hạ tầng mạng & DNS
+      "ns", "ns0", "ns1", "ns2", "ns3", "ns4", "ns5", "ns6", "ns7", "ns8", "ns9",
+      "dns", "mx", "cname", "acme", "ssl", "tls", "cert", "certs", "whois", "rdap",
+      "zone", "zones", "proxy", "proxied", "sys", "system", "server", "servers",
+
+      // Mail & Giao thức truyền thông
+      "mail", "email", "webmail", "mailbox", "smtp", "imap", "pop", "pop3",
+      "autoconfig", "autodiscover", "ftp", "sftp", "ssh", "rsync", "vpn",
+      "mqtt", "ota", "ws", "wss", "websocket",
+
+      // Xác thực, Tài khoản & Bảo mật (Chống Phishing)
+      "auth", "login", "signin", "signup", "sso", "oauth", "account", "accounts",
+      "security", "secure", "verify", "verification", "privacy", "legal", "abuse",
+      "terms", "password", "recovery", "mfa", "2fa",
+
+      // Quản trị & Điều hướng hệ thống
+      "admin", "administrator", "root", "panel", "dash", "dashboard", "portal",
+      "internal", "private", "public", "support", "help", "billing", "pay",
+      "payment", "payments", "checkout", "bank", "gov", "edu", "mil",
+
+      // Dịch vụ ứng dụng & Tên miền
+      "api", "app", "apps", "www", "blog", "docs", "doc", "status", "cdn",
+      "static", "assets", "dev", "devops", "git", "github", "gitlab",
+      "domain", "domains", "subdomain", "subdomains", "register", "registrar", "registry",
+      "staging", "prod", "production", "test", "testing", "preview", "bot", "free", "sub",
+
+      // Brand, Project & TLDs
+      "tsbyin", "tsbyinchei", "cloudflare", "vn", "io", "com", "net", "org"
+    ]);
+
+    // 2. Tối ưu Rate Limit: Load Git Trees API 1 lần duy nhất cho toàn bộ domains/
+    let registeredDomains = new Set(["demo", "sub"]);
+    const cacheStatusEl = document.getElementById("cache-status");
+
+    async function loadRegisteredDomains() {
+      try {
+        // Gọi Git Trees API 1 lần duy nhất
+        const res = await fetch("https://api.github.com/repos/tsbyinchei/tsbyin-io-vn/git/trees/main?recursive=1");
+        if (res.ok) {
+          const data = await res.json();
+          const tree = data.tree || [];
+          tree.forEach(item => {
+            if (item.path && item.path.startsWith("domains/") && item.path.endsWith(".json")) {
+              const name = item.path.replace("domains/", "").replace(".json", "").toLowerCase();
+              registeredDomains.add(name);
+            }
+          });
+          cacheStatusEl.textContent = `[${registeredDomains.size} domains synced]`;
+          return;
+        }
+      } catch (err) {
+        console.warn("Không load được GitHub Trees API, fallback domains.json:", err);
+      }
+
+      // Fallback nếu GitHub API bị rate-limit hoặc lỗi mạng
+      try {
+        const localRes = await fetch("domains.json");
+        if (localRes.ok) {
+          const localData = await localRes.json();
+          localData.forEach(d => registeredDomains.add(d.subdomain.toLowerCase()));
+          cacheStatusEl.textContent = `[${registeredDomains.size} domains local]`;
+        }
+      } catch (e) {}
+    }
+
+    loadRegisteredDomains();
+
+    // 3. Subdomain Checker Form
+    const form = document.getElementById("checkForm");
+    const input = document.getElementById("subInput");
+    const resultEl = document.getElementById("result");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = input.value.trim().toLowerCase();
+      resultEl.style.display = "flex";
+
+      if (!/^[a-z0-9]([a-z0-9-]{1,30}[a-z0-9])?$/.test(name)) {
+        resultEl.innerHTML = `<span class="res-warn">&#9888; Tên không hợp lệ (dài 3-32 ký tự, chỉ dùng a-z, 0-9, dấu '-').</span>`;
+        return;
+      }
+
+      if (RESERVED.has(name)) {
+        resultEl.innerHTML = `<span class="res-err">&#10005; Tên '${name}' nằm trong danh sách bảo lưu của hệ thống.</span>`;
+        return;
+      }
+
+      if (registeredDomains.has(name)) {
+        resultEl.innerHTML = `<span class="res-err">&#10005; Subdomain '${name}.tsbyin.io.vn' đã có người đăng ký.</span>`;
+        return;
+      }
+
+      // Khả dụng! Tự điền vào Generator & cung cấp nút tạo PR
+      selectForGenerator(name);
+
+      const template = encodeURIComponent(JSON.stringify({
+        owner: { github: "YOUR_GITHUB_USERNAME", email: "you@example.com" },
+        records: [{ type: "CNAME", name: "@", value: "YOUR_USERNAME.github.io", proxied: false }]
+      }, null, 2) + "\n");
+      const prUrl = `https://github.com/tsbyinchei/tsbyin-io-vn/new/main?filename=domains/${name}.json&value=${template}`;
+
+      resultEl.innerHTML = `
+        <span class="res-ok">&#10003; ${name}.tsbyin.io.vn khả dụng! Đã nạp vào Generator bên dưới.</span>
+        <a class="btn-claim" href="${prUrl}" target="_blank" rel="noopener">Tạo nhanh qua GitHub PR &rarr;</a>
+      `;
+    });
+
+    // 4. JSON Config Generator & GitHub Direct Link
+    const genSub = document.getElementById("genSub");
+    const genGh = document.getElementById("genGh");
+    const genEmail = document.getElementById("genEmail");
+    const genType = document.getElementById("genType");
+    const genVal = document.getElementById("genVal");
+    const genProxy = document.getElementById("genProxy");
+    const jsonPreview = document.getElementById("jsonPreview");
+    const previewName = document.getElementById("previewName");
+    const btnOpenGitHubPR = document.getElementById("btnOpenGitHubPR");
+    const btnCopyJson = document.getElementById("btnCopyJson");
+
+    function selectForGenerator(sub) {
+      genSub.value = sub;
+      updateGenerator();
+    }
+
+    function updateGenerator() {
+      const sub = genSub.value.trim().toLowerCase() || "my-subdomain";
+      const gh = genGh.value.trim() || "YOUR_GITHUB_USERNAME";
+      const email = genEmail.value.trim() || "you@example.com";
+      const type = genType.value;
+      let val = genVal.value.trim();
+      if (!val) {
+        val = type === "CNAME" ? `${gh}.github.io` : (type === "A" ? "123.45.67.89" : "target-value");
+      }
+      const proxied = type === "TXT" ? false : (genProxy.value === "true");
+
+      const config = {
+        owner: {
+          github: gh,
+          email: email
+        },
+        records: [
+          {
+            type: type,
+            name: "@",
+            value: val,
+            proxied: proxied
+          }
+        ]
+      };
+
+      const jsonStr = JSON.stringify(config, null, 2) + "\n";
+      jsonPreview.textContent = jsonStr;
+      previewName.textContent = `// PREVIEW: domains/${sub}.json`;
+
+      // Nút mở thẳng GitHub tạo PR với filename và value
+      const encoded = encodeURIComponent(jsonStr);
+      btnOpenGitHubPR.href = `https://github.com/tsbyinchei/tsbyin-io-vn/new/main?filename=domains/${sub}.json&value=${encoded}`;
+    }
+
+    [genSub, genGh, genEmail, genType, genVal, genProxy].forEach(el => {
+      el.addEventListener("input", updateGenerator);
+      el.addEventListener("change", updateGenerator);
+    });
+
+    btnCopyJson.addEventListener("click", () => {
+      navigator.clipboard.writeText(jsonPreview.textContent).then(() => {
+        btnCopyJson.textContent = "✔ Đã sao chép!";
+        setTimeout(() => { btnCopyJson.textContent = "📋 Sao chép JSON"; }, 2000);
+      });
+    });
+
+    updateGenerator();
+  </script>
+</body>
+</html>

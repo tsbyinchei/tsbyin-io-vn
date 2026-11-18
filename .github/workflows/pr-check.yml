@@ -1,0 +1,26 @@
+name: Validate Subdomain PR
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate PR changes
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: python scripts/validate_pr.py

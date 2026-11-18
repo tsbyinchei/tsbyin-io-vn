@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.DS_Store
+Thumbs.db
+
+# Third-party / Reference folders
+is-a.dev/
+.agents/

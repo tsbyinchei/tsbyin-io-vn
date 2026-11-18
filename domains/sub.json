@@ -1,0 +1,20 @@
+{
+  "owner": {
+    "github": "tsbyinchei",
+    "email": "chei@tsbyin.dev"
+  },
+  "records": [
+    {
+      "type": "CNAME",
+      "name": "@",
+      "value": "tsbyinchei.github.io",
+      "proxied": true
+    },
+    {
+      "type": "CNAME",
+      "name": "doc",
+      "value": "tsbyinchei.github.io",
+      "proxied": true
+    }
+  ]
+}

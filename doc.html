@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tài liệu hướng dẫn đăng ký và cấu hình subdomain *.tsbyin.io.vn" />
+  <title>Docs — tsbyin.io.vn Free Subdomains</title>
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico" />
+  <link rel="apple-touch-icon" href="assets/icon-192.webp" />
+  <style>
+    :root {
+      --bg: #090a0f;
+      --surface: rgba(255, 255, 255, 0.03);
+      --surface-hover: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.09);
+      --border-focus: rgba(255, 255, 255, 0.28);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --ok: #10b981;
+      --err: #ef4444;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg);
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text);
+      font-family: var(--sans);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.25rem 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .doc-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      backdrop-filter: blur(16px);
+      margin-bottom: 1.5rem;
+    }
+
+    .doc-section h2 {
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .doc-section h2 span { color: var(--accent); font-size: 0.8rem; }
+
+    .doc-section p, .doc-section li {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    .doc-section ul, .doc-section ol {
+      padding-left: 1.25rem;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .doc-section li { margin-bottom: 0.4rem; }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin: 0.75rem 0;
+      line-height: 1.5;
+    }
+
+    .badge-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .badge.ok { border-color: rgba(16, 185, 129, 0.4); color: var(--ok); }
+    .badge.err { border-color: rgba(239, 68, 68, 0.4); color: var(--err); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    footer a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="top-bar">
+      <a href="index.html" class="back-link">&larr; QUAY LẠI TRANG TRA CỨU (sub.tsbyin.io.vn)</a>
+      <a href="https://github.com/tsbyinchei/tsbyin-io-vn" target="_blank" rel="noopener" class="back-link">GITHUB REPO &rarr;</a>
+    </div>
+
+    <h1>Tài liệu <span>tsbyin.io.vn</span></h1>
+    <p class="subtitle">Hướng dẫn toàn diện về quy trình cấp phát, quy định kỹ thuật và cấu hình DNS cho subdomain.</p>
+
+    <!-- Bước đăng ký -->
+    <section class="doc-section">
+      <h2><span>01 //</span> Quy trình đăng ký 4 bước</h2>
+      <ol>
+        <li><strong>Fork repository:</strong> Truy cập repo <code>github.com/tsbyinchei/tsbyin-io-vn</code> và bấm Fork về tài khoản của bạn.</li>
+        <li><strong>Tạo file cấu hình:</strong> Thêm file <code>domains/&lt;tên-subdomain&gt;.json</code>. Bạn có thể sử dụng công cụ tạo JSON tại trang chủ để tạo sẵn file chuẩn xác.</li>
+        <li><strong>Mở Pull Request (PR):</strong> Tạo PR từ nhánh của bạn vào nhánh <code>main</code>. GitHub Actions (<code>pr-check.yml</code>) sẽ chạy tự động trong khoảng 15 giây.</li>
+        <li><strong>Tự động đồng bộ:</strong> Khi PR được merge, GitHub Actions (<code>deploy-dns.yml</code>) sẽ gọi Cloudflare API để tạo bản ghi DNS ngay lập tức.</li>
+      </ol>
+    </section>
+
+    <!-- Cấu hình mẫu -->
+    <section class="doc-section">
+      <h2><span>02 //</span> Mẫu cấu hình các nền tảng phổ biến</h2>
+      
+      <p><strong>1. Trỏ về GitHub Pages:</strong></p>
+      <pre>{
+  "owner": {
+    "github": "tsbyinchei",
+    "email": "you@domain.dev"
+  },
+  "records": [
+    {
+      "type": "CNAME",
+      "name": "@",
+      "value": "tsbyinchei.github.io",
+      "proxied": false
+    }
+  ]
+}</pre>
+
+      <p><strong>2. Trỏ về Vercel:</strong></p>
+      <pre>{
+  "owner": { "github": "your-username", "email": "you@domain.dev" },
+  "records": [
+    {
+      "type": "CNAME",
+      "name": "@",
+      "value": "cname.vercel-dns.com",
+      "proxied": false
+    }
+  ]
+}</pre>
+
+      <p><strong>3. Trỏ về máy chủ VPS cá nhân (IPv4 & Subdomain con):</strong></p>
+      <pre>{
+  "owner": { "github": "your-username", "email": "you@domain.dev" },
+  "records": [
+    { "type": "A", "name": "@", "value": "123.45.67.89", "proxied": true },
+    { "type": "A", "name": "api", "value": "123.45.67.89", "proxied": true }
+  ]
+}</pre>
+    </section>
+
+    <!-- Tiêu chuẩn & Bảo mật -->
+    <section class="doc-section">
+      <h2><span>03 //</span> Tiêu chuẩn an toàn & Bảo mật</h2>
+      <ul>
+        <li><strong>Subdomain hợp lệ:</strong> Dài từ 3 đến 32 ký tự, chỉ gồm chữ thường <code>a-z</code>, chữ số <code>0-9</code> và dấu <code>-</code>.</li>
+        <li><strong>Chặn SSRF / Private IP:</strong> Không chấp nhận trỏ bản ghi A/AAAA về IP nội bộ (<code>127.0.0.1</code>, <code>10.0.0.0/8</code>, <code>192.168.0.0/16</code>, <code>172.16.0.0/12</code>).</li>
+        <li><strong>Chặn CNAME Tunnel:</strong> Chặn trỏ CNAME về <code>.trycloudflare.com</code>, <code>.cfargotunnel.com</code>, <code>.workers.dev</code>, <code>.r2.dev</code>, <code>.blob.core.windows.net</code>, <code>.ts.net</code>.</li>
+        <li><strong>Bảo vệ quyền sở hữu:</strong> Chỉ tài khoản GitHub khai báo trong <code>owner.github</code> mới có quyền sửa hoặc xóa file của chính mình.</li>
+      </ul>
+      <div class="badge-grid">
+        <span class="badge ok">✓ Miễn phí 100%</span>
+        <span class="badge ok">✓ Tự động hóa Cloudflare DNS</span>
+        <span class="badge ok">✓ Hỗ trợ A, AAAA, CNAME, TXT</span>
+        <span class="badge err">✕ Cấm lừa đảo (Phishing)</span>
+        <span class="badge err">✕ Cấm phát tán mã độc</span>
+      </div>
+    </section>
+
+    <footer>
+      <span>&copy; 2026 TsByin &bull; Non-commercial .VN Infrastructure</span>
+      <span>Liên hệ / Hỗ trợ: <a href="mailto:admin@tsbyin.dev">admin@tsbyin.dev</a></span>
+    </footer>
+  </main>
+</body>
+</html>
