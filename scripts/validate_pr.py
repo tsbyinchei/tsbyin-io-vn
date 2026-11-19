@@ -84,6 +84,15 @@ DISALLOWED_CNAMES = (
     ".ts.net",
 )
 
+BLOCKED_KEYWORDS = (
+    # Quản trị & Xác thực
+    "admin", "login", "signin", "signup", "auth", "verify", "secure", "password", "passwd",
+    # Tài chính & Ngân hàng
+    "bank", "pay", "paypal", "momo", "zalopay", "vnpay", "vietqr", "billing", "invoice", "wallet",
+    # Cơ quan & Hệ thống
+    "gov", "support", "tsbyin", "tsbyinchei", "tuansy", "cloudflare"
+)
+
 SUBDOMAIN_REGEX = re.compile(r"^[a-z0-9]([a-z0-9-]{1,30}[a-z0-9])?$")
 
 
@@ -178,6 +187,17 @@ def main():
             errors.append(f"Tên subdomain '{subdomain}' không hợp lệ (chỉ dùng a-z, 0-9, dấu '-', dài 3-32 ký tự).")
         if subdomain in RESERVED_NAMES and not is_maintainer:
             errors.append(f"Subdomain '{subdomain}' nằm trong danh sách bảo lưu của hệ thống.")
+
+        # Kiểm tra từ khóa nhạy cảm / Chống lừa đảo dạng substring
+        if not is_maintainer:
+            for kw in BLOCKED_KEYWORDS:
+                if kw in subdomain:
+                    if kw == "pay" and "display" in subdomain:
+                        continue
+                    if kw == "auth" and "author" in subdomain:
+                        continue
+                    errors.append(f"Subdomain '{subdomain}' chứa từ khóa nhạy cảm bị hạn chế ('{kw}').")
+                    break
 
         # Chống sửa/xóa file của người khác
         if status.startswith("M") or status.startswith("D"):

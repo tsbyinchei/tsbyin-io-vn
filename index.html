@@ -588,6 +588,13 @@
       "store", "shop", "market", "update", "updates", "upgrade", "patch", "firmware"
     ]);
 
+    // Danh sách từ khóa cấm xuất hiện dưới dạng substring (chống phishing)
+    const BLOCKED_KEYWORDS = [
+      "admin", "login", "signin", "signup", "auth", "verify", "secure", "password", "passwd",
+      "bank", "pay", "paypal", "momo", "zalopay", "vnpay", "vietqr", "billing", "invoice", "wallet",
+      "gov", "support", "tsbyin", "tsbyinchei", "tuansy", "cloudflare"
+    ];
+
     // 2. Tối ưu Rate Limit: Load Git Trees API 1 lần duy nhất cho toàn bộ domains/
     let registeredDomains = new Set(["demo", "sub"]);
     const cacheStatusEl = document.getElementById("cache-status");
@@ -643,6 +650,16 @@
       if (RESERVED.has(name)) {
         resultEl.innerHTML = `<span class="res-err">&#10005; Tên '${name}' nằm trong danh sách bảo lưu của hệ thống.</span>`;
         return;
+      }
+
+      // Kiểm tra substring từ khóa nhạy cảm
+      for (const kw of BLOCKED_KEYWORDS) {
+        if (name.includes(kw)) {
+          if (kw === "pay" && name.includes("display")) continue;
+          if (kw === "auth" && name.includes("author")) continue;
+          resultEl.innerHTML = `<span class="res-err">&#10005; Subdomain '${name}' chứa từ khóa nhạy cảm bị hạn chế ('${kw}').</span>`;
+          return;
+        }
       }
 
       if (registeredDomains.has(name)) {
