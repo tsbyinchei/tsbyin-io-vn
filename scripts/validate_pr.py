@@ -7,34 +7,61 @@ import sys
 
 ALLOWED_TYPES = {"A", "AAAA", "CNAME", "TXT"}
 RESERVED_NAMES = {
-    # Hạ tầng mạng & DNS
+    # 1. Hạ tầng mạng, DNS & RFC
     "ns", "ns0", "ns1", "ns2", "ns3", "ns4", "ns5", "ns6", "ns7", "ns8", "ns9",
-    "dns", "mx", "cname", "acme", "ssl", "tls", "cert", "certs", "whois", "rdap",
-    "zone", "zones", "proxy", "proxied", "sys", "system", "server", "servers",
+    "dns", "mx", "cname", "txt", "srv", "ptr", "soa", "caa", "dnssec",
+    "acme", "ssl", "tls", "cert", "certs", "whois", "rdap",
+    "zone", "zones", "proxy", "proxied", "edge", "tunnel", "tun", "cf",
+    "sys", "system", "server", "servers", "node", "nodes", "host", "hosts",
+    "localhost", "local", "default", "wildcard", "router", "gateway",
 
-    # Mail & Giao thức truyền thông
+    # 2. Mail, Giao thức truyền thông & IoT/IoMT
     "mail", "email", "webmail", "mailbox", "smtp", "imap", "pop", "pop3",
-    "autoconfig", "autodiscover", "ftp", "sftp", "ssh", "rsync", "vpn",
-    "mqtt", "ota", "ws", "wss", "websocket",
+    "autoconfig", "autodiscover", "postmaster", "hostmaster", "webmaster",
+    "noreply", "no-reply", "mailer-daemon", "bounce", "bounces",
+    "ftp", "sftp", "ssh", "rsync", "vpn", "wireguard", "wg",
+    "mqtt", "ota", "ws", "wss", "websocket", "webhook", "webhooks", "hook", "hooks",
+    "iot", "iomt", "telemetry", "sensor", "sensors", "device", "devices",
 
-    # Xác thực, Tài khoản & Bảo mật (Chống Phishing)
-    "auth", "login", "signin", "signup", "sso", "oauth", "account", "accounts",
-    "security", "secure", "verify", "verification", "privacy", "legal", "abuse",
-    "terms", "password", "recovery", "mfa", "2fa",
+    # 3. Xác thực, Tài khoản & Bảo mật
+    "auth", "login", "signin", "signup", "sso", "oauth", "oidc", "jwt", "token",
+    "account", "accounts", "user", "users", "profile", "id", "verify", "verification",
+    "security", "secure", "privacy", "legal", "abuse", "dmca", "tos", "terms",
+    "password", "passwd", "recovery", "reset", "mfa", "2fa", "otp",
 
-    # Quản trị & Điều hướng hệ thống
-    "admin", "administrator", "root", "panel", "dash", "dashboard", "portal",
-    "internal", "private", "public", "support", "help", "billing", "pay",
-    "payment", "payments", "checkout", "bank", "gov", "edu", "mil",
+    # 4. Quản trị, Tài chính & Tổ chức nhạy cảm
+    "admin", "administrator", "root", "panel", "cpanel", "1panel",
+    "dash", "dashboard", "portal", "console", "manage", "management",
+    "internal", "private", "public", "support", "help", "contact", "info",
+    "billing", "pay", "payment", "payments", "checkout", "invoice", "wallet",
+    "bank", "gov", "edu", "mil", "vnnic", "nic",
 
-    # Dịch vụ ứng dụng & Tên miền
-    "api", "app", "apps", "www", "blog", "docs", "doc", "status", "cdn",
-    "static", "assets", "dev", "devops", "git", "github", "gitlab",
+    # 5. Hệ sinh thái Dịch vụ, Homelab & Tiện ích của TsByin
+    "api", "apis", "app", "apps", "www", "web", "site", "sites",
+    "blog", "docs", "doc", "wiki", "guide", "status", "uptime", "monitor", "metrics",
+    "cdn", "static", "assets", "media", "film", "stream", "video", "audio",
+    "s3", "minio", "storage", "bucket", "dl", "download", "downloads",
+    "drop", "share", "bin", "paste", "file", "files", "upload", "uploads", "iso",
+    "dev", "devops", "git", "github", "gitlab", "ci", "cd", "actions",
     "domain", "domains", "subdomain", "subdomains", "register", "registrar", "registry",
-    "staging", "prod", "production", "test", "testing", "preview", "bot",
+    "staging", "prod", "production", "test", "testing", "preview", "sandbox", "lab", "labs",
+    "bot", "bots", "ai", "agent", "agents", "mcp",
+    "free", "sub", "qr", "eat", "exam", "quiz", "task", "tasks",
+    "emqx", "grafana", "influx", "influxdb", "n8n", "ag", "docker",
 
-    # Brand, Project & TLDs
-    "tsbyin", "tsbyinchei", "cloudflare", "vn", "io", "com", "net", "org"
+    # 6. Thương hiệu cá nhân & TLDs
+    "tsbyin", "tsbyinchei", "chei", "tuansy", "phenikaa",
+    "cloudflare", "google", "firebase", "vercel", "netlify",
+    "vn", "io", "com", "net", "org", "co", "me", "xyz", "site", "online",
+
+    # 7. Cloud Storage, Office & Email Providers (Chống giả mạo dịch vụ & typosquatting)
+    "drive", "onedrive", "icloud", "dropbox", "box", "mega", "terabox", "nextcloud", "owncloud",
+    "gmail", "googlemail", "outlook", "hotmail", "yahoo", "proton", "protonmail", "zoho",
+    "stmp", "smpt", "impa", "web-mail", "e-mail", "mailserver", "mx1", "mx2", "mx3",
+    "relay", "spf", "dkim", "dmarc", "resend", "sendgrid", "mailgun", "ses",
+    "docs", "sheets", "slides", "forms", "meet", "zoom", "teams", "discord", "telegram", "zalo",
+    "momo", "zalopay", "vnpay", "vietqr", "napas", "payos", "stripe", "paypal",
+    "store", "shop", "market", "update", "updates", "upgrade", "patch", "firmware",
 }
 
 DISALLOWED_CNAMES = (
